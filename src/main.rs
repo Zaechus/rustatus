@@ -2,23 +2,10 @@ use std::{fs, thread, time::Duration};
 
 use time::{macros::format_description, OffsetDateTime};
 
-fn block(text: &str) -> String {
-    format!("{{\"full_text\":\" {} \"}},", text)
-}
-
-fn battery_status() -> String {
-    match fs::read_to_string("/sys/class/power_supply/BAT0/status")
-        .unwrap()
-        .trim()
-    {
-        "Charging" => "+".to_owned(),
-        "Discharging" => "-".to_owned(),
-        _ => String::new(),
-    }
-}
+use rustbar::*;
 
 fn main() {
-    let f = format_description!(
+    let date_format = format_description!(
         version = 2,
         "[weekday repr:short] [year]-[month]-[day] [hour]:[minute]"
     );
@@ -26,7 +13,8 @@ fn main() {
     println!("{}\n[", r#"{"version": 1, "click_events": true}"#);
     loop {
         println!(
-            "[{}{}],",
+            "[{}{}{}],",
+            block(&memory().unwrap()),
             block(&format!(
                 "{} {}%",
                 battery_status(),
@@ -34,7 +22,12 @@ fn main() {
                     .unwrap()
                     .trim()
             )),
-            block(&OffsetDateTime::now_local().unwrap().format(f).unwrap())
+            block(
+                &OffsetDateTime::now_local()
+                    .unwrap()
+                    .format(date_format)
+                    .unwrap()
+            )
         );
         thread::sleep(Duration::from_millis(4000));
     }
