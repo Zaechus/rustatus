@@ -1,4 +1,4 @@
-use std::{fs, thread, time::Duration};
+use std::{thread, time::Duration};
 
 use time::{macros::format_description, OffsetDateTime};
 
@@ -13,15 +13,11 @@ fn main() {
     println!("{}\n[", r#"{"version": 1, "click_events": true}"#);
     loop {
         println!(
-            "[{}{}{}],",
+            "[{}{}{}{}{}],",
+            block(&format!("{}{:.1}GHz", boost(), freq().unwrap())),
+            block(&format!("{}°C", temperature().unwrap())),
             block(&memory().unwrap()),
-            block(&format!(
-                "{} {}%",
-                battery_status(),
-                fs::read_to_string("/sys/class/power_supply/BAT0/capacity")
-                    .unwrap()
-                    .trim()
-            )),
+            block(&format!("{} {}%", battery_status(), battery_capacity())),
             block(
                 &OffsetDateTime::now_local()
                     .unwrap()

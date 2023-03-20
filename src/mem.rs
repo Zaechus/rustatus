@@ -6,21 +6,21 @@ use std::{
 pub fn memory() -> io::Result<String> {
     let mut used = 0;
 
-    for line in BufReader::new(File::open("/proc/meminfo")?).lines() {
+    for line in BufReader::new(File::open("/sys/devices/system/node/node0/meminfo")?).lines() {
         let line = line?;
         let line: Vec<_> = line.split_whitespace().collect();
-        match line[0] {
+        match line[2] {
             "MemTotal:" => {
-                used = line[1].parse::<i32>().unwrap_or(0);
+                used = line[3].parse::<u32>().unwrap_or(0);
             }
-            "MemFree:" | "Buffers:" | "Cached:" => {
-                used -= line[1].parse::<i32>().unwrap_or(0);
+            "MemFree:" | "FilePages:" => {
+                used -= line[3].parse::<u32>().unwrap_or(0);
             }
             "Shmem:" => {
-                used += line[1].parse::<i32>().unwrap_or(0);
+                used += line[3].parse::<u32>().unwrap_or(0);
             }
             "SReclaimable:" => {
-                used -= line[1].parse::<i32>().unwrap_or(0);
+                used -= line[3].parse::<u32>().unwrap_or(0);
                 break;
             }
             _ => (),
@@ -30,8 +30,8 @@ pub fn memory() -> io::Result<String> {
     used /= 1024;
 
     Ok(if used >= 1000 {
-        format!("{:.1}G", (used as f64 / 1024.0))
+        format!("{:.1}GiB", (used as f64 / 1024.0))
     } else {
-        format!("{}M", used)
+        format!("{}MiB", used)
     })
 }
