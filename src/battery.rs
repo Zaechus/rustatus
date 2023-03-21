@@ -12,8 +12,8 @@ pub fn battery_status() -> String {
         .unwrap()
         .trim()
     {
-        "Charging" => "+".to_owned(),
-        "Discharging" => "-".to_owned(),
+        "Charging" => "+ ".to_owned(),
+        "Discharging" => "- ".to_owned(),
         _ => String::new(),
     }
 }

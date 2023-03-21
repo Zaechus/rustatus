@@ -17,7 +17,7 @@ fn main() {
             block(&format!("{}{:.1}GHz", boost(), freq().unwrap())),
             block(&format!("{}°C", temperature().unwrap())),
             block(&memory().unwrap()),
-            block(&format!("{} {}%", battery_status(), battery_capacity())),
+            block(&format!("{}{}%", battery_status(), battery_capacity())),
             block(
                 &OffsetDateTime::now_local()
                     .unwrap()
