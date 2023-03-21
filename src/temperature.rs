@@ -1,10 +1,22 @@
-use std::{fs, io};
+use std::fs;
 
-// TODO: all thermal_zones
-pub fn temperature() -> io::Result<u32> {
-    Ok(fs::read_to_string("/sys/class/thermal/thermal_zone0/temp")?
-        .trim()
-        .parse::<u32>()
+use glob::glob;
+
+pub fn temperature() -> u32 {
+    glob("/sys/class/thermal/thermal_zone*/temp")
         .unwrap()
-        / 1000)
+        .map(|entry| {
+            if let Ok(path) = entry {
+                fs::read_to_string(path)
+                    .unwrap()
+                    .trim()
+                    .parse::<u32>()
+                    .unwrap()
+                    / 1000
+            } else {
+                0
+            }
+        })
+        .max()
+        .unwrap_or(0)
 }

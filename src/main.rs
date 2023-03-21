@@ -15,7 +15,7 @@ fn main() {
         println!(
             "[{}{}{}{}{}],",
             block(&format!("{}{:.1}GHz", boost(), freq().unwrap())),
-            block(&format!("{}°C", temperature().unwrap())),
+            block(&format!("{}°C", temperature())),
             block(&memory().unwrap()),
             block(&format!("{}{}%", battery_status(), battery_capacity())),
             block(
