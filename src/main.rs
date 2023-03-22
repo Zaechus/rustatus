@@ -5,6 +5,13 @@ use time::{macros::format_description, OffsetDateTime};
 use rustbar::*;
 
 fn main() -> io::Result<()> {
+    let config = Config::new("#cc241d", "#98971a", "#d79921");
+    // let config = Config::new(
+    //     env::args().nth(1).unwrap(),
+    //     env::args().nth(2).unwrap(),
+    //     env::args().nth(3).unwrap(),
+    // );
+
     let date_format = format_description!(
         version = 2,
         "[weekday repr:short] [year]-[month]-[day] [hour]:[minute]"
@@ -14,16 +21,15 @@ fn main() -> io::Result<()> {
     loop {
         println!(
             "[{}{}{}{}{}],",
-            block(&format!("{}{:.1}GHz", boost(), freq()?), BG),
-            block(&format!("{}°C", temperature()?), BG),
-            block(&memory()?, BG),
-            battery_block(),
+            block(&format!("{}{:.1}GHz", boost(), freq()?)),
+            block(&format!("{}°C", temperature()?)),
+            block(&memory()?),
+            battery_block(&config),
             block(
                 &OffsetDateTime::now_local()
                     .unwrap()
                     .format(date_format)
                     .unwrap(),
-                BG
             )
         );
         thread::sleep(Duration::from_millis(4000));

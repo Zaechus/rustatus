@@ -1,8 +1,8 @@
 use std::fs;
 
-use crate::{block, BG, GREEN, RED, YELLOW};
+use crate::{colored_block, Config};
 
-pub fn battery_block() -> String {
+pub fn battery_block(config: &Config) -> String {
     let capacity = fs::read_to_string("/sys/class/power_supply/BAT0/capacity")
         .unwrap()
         .trim()
@@ -10,13 +10,13 @@ pub fn battery_block() -> String {
         .unwrap();
 
     let color = match capacity {
-        60..=99 => GREEN,
-        30..=59 => YELLOW,
-        0..=29 => RED,
-        _ => BG,
+        60..=99 => config.green(),
+        30..=59 => config.yellow(),
+        0..=29 => config.red(),
+        _ => "",
     };
 
-    block(&format!("{}{}%", status(), capacity), color)
+    colored_block(&format!("{}{}%", status(), capacity), color)
 }
 
 fn status() -> String {
