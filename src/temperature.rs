@@ -1,22 +1,23 @@
-use std::fs;
+use std::{fs, io};
 
-use glob::glob;
-
-pub fn temperature() -> u32 {
-    glob("/sys/class/thermal/thermal_zone*/temp")
-        .unwrap()
-        .map(|entry| {
-            if let Ok(path) = entry {
-                fs::read_to_string(path)
-                    .unwrap()
-                    .trim()
-                    .parse::<u32>()
-                    .unwrap()
-                    / 1000
+pub fn temperature() -> io::Result<u32> {
+    Ok(fs::read_dir("/sys/class/thermal")?
+        .map(|x| {
+            if let Ok(x) = x.unwrap().file_name().into_string() {
+                if x.starts_with("thermal_zone") {
+                    fs::read_to_string(format!("/sys/class/thermal/{}/temp", x))
+                        .unwrap()
+                        .trim()
+                        .parse::<u32>()
+                        .unwrap()
+                        / 1000
+                } else {
+                    0
+                }
             } else {
                 0
             }
         })
         .max()
-        .unwrap_or(0)
+        .unwrap())
 }

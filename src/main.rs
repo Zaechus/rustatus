@@ -1,10 +1,10 @@
-use std::{thread, time::Duration};
+use std::{io, thread, time::Duration};
 
 use time::{macros::format_description, OffsetDateTime};
 
 use rustbar::*;
 
-fn main() {
+fn main() -> io::Result<()> {
     let date_format = format_description!(
         version = 2,
         "[weekday repr:short] [year]-[month]-[day] [hour]:[minute]"
@@ -14,9 +14,9 @@ fn main() {
     loop {
         println!(
             "[{}{}{}{}{}],",
-            block(&format!("{}{:.1}GHz", boost(), freq().unwrap()), BG),
-            block(&format!("{}°C", temperature()), BG),
-            block(&memory().unwrap(), BG),
+            block(&format!("{}{:.1}GHz", boost(), freq()?), BG),
+            block(&format!("{}°C", temperature()?), BG),
+            block(&memory()?, BG),
             battery_block(),
             block(
                 &OffsetDateTime::now_local()

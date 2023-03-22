@@ -5,5 +5,4 @@ authors = ["Maxwell Anderson <zaechus@pm.me>"]
 edition = "2021"
 
 [dependencies]
-glob = "0.3"
 time = { version = "0.3", features = ["local-offset", "macros", "formatting"] }
