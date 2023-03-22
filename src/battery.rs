@@ -1,13 +1,25 @@
 use std::fs;
 
-pub fn battery_capacity() -> String {
-    fs::read_to_string("/sys/class/power_supply/BAT0/capacity")
+use crate::{block, BG, GREEN, RED, YELLOW};
+
+pub fn battery_block() -> String {
+    let capacity = fs::read_to_string("/sys/class/power_supply/BAT0/capacity")
         .unwrap()
         .trim()
-        .to_owned()
+        .parse::<u8>()
+        .unwrap();
+
+    let color = match capacity {
+        60..=99 => GREEN,
+        30..=59 => YELLOW,
+        0..=29 => RED,
+        _ => BG,
+    };
+
+    block(&format!("{}{}%", status(), capacity), color)
 }
 
-pub fn battery_status() -> String {
+fn status() -> String {
     match fs::read_to_string("/sys/class/power_supply/BAT0/status")
         .unwrap()
         .trim()

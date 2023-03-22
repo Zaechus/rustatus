@@ -10,19 +10,20 @@ fn main() {
         "[weekday repr:short] [year]-[month]-[day] [hour]:[minute]"
     );
 
-    println!("{}\n[", r#"{"version": 1, "click_events": true}"#);
+    println!("{{\"version\": 1, \"click_events\": true}}\n[");
     loop {
         println!(
             "[{}{}{}{}{}],",
-            block(&format!("{}{:.1}GHz", boost(), freq().unwrap())),
-            block(&format!("{}°C", temperature())),
-            block(&memory().unwrap()),
-            block(&format!("{}{}%", battery_status(), battery_capacity())),
+            block(&format!("{}{:.1}GHz", boost(), freq().unwrap()), BG),
+            block(&format!("{}°C", temperature()), BG),
+            block(&memory().unwrap(), BG),
+            battery_block(),
             block(
                 &OffsetDateTime::now_local()
                     .unwrap()
                     .format(date_format)
-                    .unwrap()
+                    .unwrap(),
+                BG
             )
         );
         thread::sleep(Duration::from_millis(4000));
