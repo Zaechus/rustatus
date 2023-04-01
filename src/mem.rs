@@ -11,16 +11,16 @@ pub fn memory() -> io::Result<String> {
         let line: Vec<_> = line.split_whitespace().collect();
         match line[2] {
             "MemTotal:" => {
-                used = line[3].parse::<u32>().unwrap_or(0);
+                used = line[3].parse::<u32>().unwrap();
             }
             "MemFree:" | "FilePages:" => {
-                used -= line[3].parse::<u32>().unwrap_or(0);
+                used -= line[3].parse::<u32>().unwrap();
             }
             "Shmem:" => {
-                used += line[3].parse::<u32>().unwrap_or(0);
+                used += line[3].parse::<u32>().unwrap();
             }
             "SReclaimable:" => {
-                used -= line[3].parse::<u32>().unwrap_or(0);
+                used -= line[3].parse::<u32>().unwrap();
                 break;
             }
             _ => (),
@@ -30,8 +30,8 @@ pub fn memory() -> io::Result<String> {
     used /= 1024;
 
     Ok(if used >= 1000 {
-        format!("{:.1}GiB", (used as f64 / 1024.0))
+        format!("\u{f035b} {:.1}GiB", (used as f64 / 1024.0))
     } else {
-        format!("{}MiB", used)
+        format!("\u{f035b} {}MiB", used)
     })
 }

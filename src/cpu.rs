@@ -1,14 +1,16 @@
 use std::{fs, io};
 
-pub fn boost() -> String {
+pub const CPU_ICON: char = '\u{f0e4}';
+
+pub fn boost<'a>() -> &'a str {
     match fs::read_to_string("/sys/devices/system/cpu/cpufreq/boost")
         .unwrap()
         .trim()
         .parse::<u8>()
         .unwrap()
     {
-        0 => String::new(),
-        _ => "*".to_owned(),
+        0 => "",
+        _ => "*",
     }
 }
 

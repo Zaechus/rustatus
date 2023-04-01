@@ -1,31 +1,32 @@
 use std::fs;
 
-use crate::{colored_block, Config};
+use crate::colored_block;
 
-pub fn battery_block(config: &Config) -> String {
-    let capacity = fs::read_to_string("/sys/class/power_supply/BAT0/capacity")
-        .unwrap()
-        .trim()
-        .parse::<u8>()
-        .unwrap();
+pub fn battery_block() -> String {
+    if let Ok(capacity) = fs::read_to_string("/sys/class/power_supply/BAT0/capacity") {
+        let capacity = capacity.trim().parse::<u8>().unwrap();
 
-    let color = match capacity {
-        60..=99 => config.green(),
-        30..=59 => config.yellow(),
-        0..=29 => config.red(),
-        _ => "",
-    };
+        let (icon, color) = match (capacity, status()) {
+            (_, "Charging") => ('\u{f1e6}', ""),
+            (90.., _) => ('\u{f240}', ""),
+            (66.., _) => ('\u{f241}', ""),
+            (33.., _) => ('\u{f242}', ""),
+            (10.., _) => ('\u{f243}', ""),
+            (0.., _) => ('\u{f244}', "#cc241d"),
+        };
 
-    colored_block(&format!("{}{}%", status(), capacity), color)
+        colored_block(&format!(" {icon}  {capacity}%"), color)
+    } else {
+        String::new()
+    }
 }
 
-fn status() -> String {
+fn status<'a>() -> &'a str {
     match fs::read_to_string("/sys/class/power_supply/BAT0/status")
         .unwrap()
         .trim()
     {
-        "Charging" => "+ ".to_owned(),
-        "Discharging" => "- ".to_owned(),
-        _ => String::new(),
+        "Charging" => "Charging",
+        _ => "",
     }
 }

@@ -1,23 +1,24 @@
 mod battery;
-mod config;
+mod clock;
 mod cpu;
 mod mem;
 mod temperature;
 
 pub use battery::battery_block;
-pub use config::Config;
+pub use clock::*;
 pub use cpu::*;
 pub use mem::*;
-pub use temperature::*;
+pub use temperature::temperature_block;
+
+pub fn init() {
+    // println!("{{\"version\": 1, \"click_events\": true}}\n[");
+    println!("{{\"version\": 1}}\n[");
+}
 
 pub fn block(text: &str) -> String {
-    colored_block(text, "")
+    format!("{{\"full_text\":\"{text} \",\"separator\":false}},")
 }
 
 pub fn colored_block(text: &str, color: &str) -> String {
-    if color.is_empty() {
-        format!("{{\"full_text\":\" {text} \",\"separator\":false}},")
-    } else {
-        format!("{{\"full_text\":\" {text} \",\"background\":\"{color}\",\"separator\":false}},")
-    }
+    format!("{{\"full_text\":\"{text} \",\"background\":\"{color}\",\"separator\":false}},")
 }
