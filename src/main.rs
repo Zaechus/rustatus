@@ -1,9 +1,9 @@
 use std::{thread, time::Duration};
 
-use rustbar::*;
+use rustatus::*;
 
 fn main() {
-    rustbar::init();
+    rustatus::init();
 
     loop {
         println!(

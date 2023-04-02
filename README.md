@@ -1,1 +1,1 @@
-# rustbar
+# rustatus

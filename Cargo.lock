@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustbar"
+name = "rustatus"
 version = "0.1.0"
 dependencies = [
  "time",

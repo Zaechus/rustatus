@@ -8,7 +8,7 @@ pub fn battery_block() -> String {
 
         let (icon, color) = match (capacity, status()) {
             (_, "Charging") => ('\u{f1e6}', ""),
-            (95.., "Not charging") => return block(" \u{f240}  "),
+            (95.., "Full" | "Not charging") => return block(" \u{f240}  "),
             (90.., "Discharging") => ('\u{f240}', ""),
             (66.., "Discharging") => ('\u{f241}', ""),
             (33.., "Discharging") => ('\u{f242}', ""),
@@ -30,6 +30,7 @@ fn status<'a>() -> &'a str {
     {
         "Charging" => "Charging",
         "Discharging" => "Discharging",
+        "Full" => "Full",
         "Not charging" => "Not charging",
         _ => "",
     }
