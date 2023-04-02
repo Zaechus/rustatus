@@ -9,7 +9,7 @@ pub fn clock() -> String {
     format!(
         "\u{f017} {}",
         &OffsetDateTime::now_local()
-            .unwrap()
+            .unwrap_or(OffsetDateTime::now_utc())
             .format(DATE_FORMAT)
             .unwrap(),
     )
