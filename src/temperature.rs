@@ -2,15 +2,13 @@ use std::fs;
 
 use crate::{block, colored_block, RED};
 
-const TEMP_ICON: char = '\u{f2c7}';
-
 pub fn temperature_block() -> String {
     let temperature = temperature();
 
     if temperature > 80 {
-        colored_block(&format!("{TEMP_ICON} {}°C", temperature), RED)
+        colored_block(&format!("{}°C", temperature), RED)
     } else {
-        block(&format!("{TEMP_ICON} {}°C", temperature))
+        block(&format!("{}°C", temperature))
     }
 }
 
