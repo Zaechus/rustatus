@@ -18,12 +18,11 @@ fn temperature() -> u32 {
         .map(|x| x.unwrap().file_name().into_string().unwrap())
         .filter(|x| x.starts_with("thermal_zone"))
         .map(|x| {
-            fs::read_to_string(format!("/sys/class/thermal/{}/temp", x))
-                .unwrap()
-                .trim()
-                .parse::<u32>()
-                .unwrap()
-                / 1000
+            if let Ok(s) = fs::read_to_string(format!("/sys/class/thermal/{}/temp", x)) {
+                s.trim().parse::<u32>().unwrap() / 1000
+            } else {
+                0
+            }
         })
         .max()
         .unwrap()
