@@ -11,8 +11,8 @@ pub fn battery_block() -> String {
 
             let icon = match (capacity, status(bat)) {
                 (_, "Charging") => '\u{f1e6}',
-                (94.., "Full" | "Not charging") => return block("\u{f240} "),
-                (90.., "Discharging") => '\u{f240}',
+                (85.., "Full" | "Not charging") => return block("\u{f240} "),
+                (85.., "Discharging") => '\u{f240}',
                 (66.., "Discharging") => '\u{f241}',
                 (33.., "Discharging") => '\u{f242}',
                 (10.., "Discharging") => '\u{f243}',
