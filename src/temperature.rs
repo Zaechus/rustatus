@@ -26,6 +26,7 @@ fn temperature() -> Option<u32> {
                     0
                 }
             })
+            .filter(|&x| x < 179) // computer is hopefully not on fire
             .max()
     } else {
         None
